@@ -30,13 +30,16 @@ class CustomLoadingWidget extends StatefulWidget {
   State<CustomLoadingWidget> createState() => _CustomLoadingWidgetState();
 }
 
+/// here I used stateful widget to manage all the animations
+/// also which custom painter should be used here I decides
+
 class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
     with TickerProviderStateMixin {
   late AnimationController loadingController;
-  late Animation loadingCircularAnimation;
-  late Animation loadingLinearAnimation;
-  late Animation textAnimation;
-  late Animation colorAnimation;
+  late Animation<double> loadingCircularAnimation;
+  late Animation<double> loadingLinearAnimation;
+  late Animation<int> textAnimation;
+  late Animation<Color?> colorAnimation;
   @override
   void initState() {
     super.initState();
@@ -47,16 +50,22 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
         setState(() {});
       });
 
-    loadingLinearAnimation = Tween<double>(begin: 0, end: widget.size * 4)
-        .animate(loadingController);
-    loadingCircularAnimation =
-        Tween<double>(begin: 0, end: 2 * pi).animate(loadingController);
-    colorAnimation =
-        ColorTween(begin: widget.loadingStartColor, end: widget.loadingEndColor)
-            .animate(
-      CurvedAnimation(parent: loadingController, curve: Curves.bounceInOut),
-    );
-    textAnimation = IntTween(begin: 0, end: 100).animate(loadingController);
+    // tween for linear progress bar
+    final Tween<double> linearProgressTween =
+        Tween<double>(begin: 0, end: widget.size * 4);
+    // tween for circular progress bar
+    final Tween<double> circularProgressTween =
+        Tween<double>(begin: 0, end: 2 * pi);
+    // tween for the color change in both progress bars
+    final ColorTween colorTweenForProgress = ColorTween(
+        begin: widget.loadingStartColor, end: widget.loadingEndColor);
+    // tween for the text update in both progress bars
+    final IntTween textTweenForProgress = IntTween(begin: 0, end: 100);
+
+    loadingLinearAnimation = linearProgressTween.animate(loadingController);
+    loadingCircularAnimation = circularProgressTween.animate(loadingController);
+    colorAnimation = colorTweenForProgress.animate(loadingController);
+    textAnimation = textTweenForProgress.animate(loadingController);
   }
 
   void onPressed() {
@@ -79,11 +88,12 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
       children: [
         Builder(builder: (context) {
           return widget.progressBarStyle == ProgressBarStyle.circular
+              // custom widget if the selected style is circular
               ? CustomPaint(
                   painter: CustomLoadingCirclePainter(
                       strokeColor: widget.strokeColor,
                       sweepAngle: loadingCircularAnimation.value,
-                      loadingColor: colorAnimation.value),
+                      loadingColor: colorAnimation.value!),
                   child: SizedBox(
                     width: widget.size,
                     height: widget.size,
@@ -92,11 +102,12 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
                     ),
                   ),
                 )
+              // custom widget if the selected style is linear
               : CustomPaint(
                   painter: CustomLoadingLinearPainter(
                       progress: loadingLinearAnimation.value,
                       strokeColor: widget.strokeColor,
-                      loadingColor: colorAnimation.value),
+                      loadingColor: colorAnimation.value!),
                   child: SizedBox(
                     height: widget.size,
                     width: widget.size * 4,
@@ -106,13 +117,17 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
                   ),
                 );
         }),
-        Text(
-          '${textAnimation.value}%',
-          style: TextStyle(
-              color: widget.textColor,
-              fontSize: widget.size * 0.2,
-              fontWeight: FontWeight.bold),
-        ),
+
+        // progress update in text if user selected {showLoadingInDigit} as true
+        widget.showLoadingInDigit
+            ? Text(
+                '${textAnimation.value}%',
+                style: TextStyle(
+                    color: widget.textColor,
+                    fontSize: widget.size * 0.2,
+                    fontWeight: FontWeight.bold),
+              )
+            : const SizedBox(),
       ],
     );
   }

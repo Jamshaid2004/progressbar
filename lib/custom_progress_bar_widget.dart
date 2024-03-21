@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_loading_animation/loading_widget.dart';
 
 enum ProgressBarStyle { linear, circular }
-
+/// widget for user to user and consume
+/// enumeration of [ProgressBarStyle] decides the custom painter to be used
+/// every property can be handled through this stateless widget
+/// every parameter contains its default value so user can use this widget without even giving any value
+/// also user can modify any value as per requirement
 class CustomProgressBarWidget extends StatelessWidget {
   final Color startColor;
   final Color endColor;
