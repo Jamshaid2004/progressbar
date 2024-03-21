@@ -46,6 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
               progressBarStyle: ProgressBarStyle.linear,
               size: 70,
             ),
+            SizedBox(
+              height: 50,
+            ),
+            CustomProgressBarWidget(
+              size: 100,
+              progressBarStyle: ProgressBarStyle.circular,
+            )
           ],
         ),
       ),

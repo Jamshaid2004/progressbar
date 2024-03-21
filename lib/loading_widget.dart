@@ -55,7 +55,7 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
         Tween<double>(begin: 0, end: widget.size * 4);
     // tween for circular progress bar
     final Tween<double> circularProgressTween =
-        Tween<double>(begin: 0, end: 2 * pi);
+        Tween<double>(begin: degreeToRadian(0), end: degreeToRadian(360));
     // tween for the color change in both progress bars
     final ColorTween colorTweenForProgress = ColorTween(
         begin: widget.loadingStartColor, end: widget.loadingEndColor);
@@ -66,6 +66,10 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
     loadingCircularAnimation = circularProgressTween.animate(loadingController);
     colorAnimation = colorTweenForProgress.animate(loadingController);
     textAnimation = textTweenForProgress.animate(loadingController);
+  }
+
+  double degreeToRadian(int degree) {
+    return degree * pi / 180;
   }
 
   void onPressed() {
