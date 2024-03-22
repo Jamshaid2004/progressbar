@@ -5,9 +5,11 @@ class CustomLoadingLinearPainter extends CustomPainter {
   final double progress;
   final Color loadingColor;
   final Color strokeColor;
+  final Color backGroundColor;
   CustomLoadingLinearPainter(
       {required this.progress,
       required this.loadingColor,
+      required this.backGroundColor,
       required this.strokeColor});
   @override
   void paint(Canvas canvas, Size size) {
@@ -22,16 +24,20 @@ class CustomLoadingLinearPainter extends CustomPainter {
     // paint for the fill
     Paint fillPaint = Paint()..color = loadingColor;
 
-    // draw of the progress
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(Rect.fromLTRB(0, 0, progress, height),
-            Radius.circular(width * 0.1)),
-        fillPaint);
     // draw of the bar border
     canvas.drawRRect(
         RRect.fromRectAndRadius(
             Rect.fromLTRB(0, 0, width, height), Radius.circular(width * 0.1)),
         strokePaint);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+            Rect.fromLTRB(0, 0, width, height), Radius.circular(width * 0.1)),
+        Paint()..color = backGroundColor);
+    // draw of the progress
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTRB(0, 0, progress, height),
+            Radius.circular(width * 0.1)),
+        fillPaint);
   }
 
   @override

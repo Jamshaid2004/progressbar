@@ -19,11 +19,13 @@ class CustomProgressBarWidget extends StatelessWidget {
   final Color textColor;
   final int progressedValue;
   final int totalValue;
+  final Color backgroundColor;
 
   const CustomProgressBarWidget({
     super.key,
     this.startColor = Colors.red,
     this.endColor = Colors.green,
+    this.backgroundColor = Colors.white,
     this.durationToComplete = const Duration(seconds: 10),
     this.progressBarStyle = ProgressBarStyle.linear,
     this.strokeColor = Colors.black,
@@ -39,6 +41,7 @@ class CustomProgressBarWidget extends StatelessWidget {
     return CustomLoadingWidget(
         size: size,
         textColor: textColor,
+        backGroundColor: backgroundColor,
         strokeColor: strokeColor,
         completedProgressValue: progressedValue,
         totalProgressValue: totalValue,

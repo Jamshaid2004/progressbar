@@ -5,9 +5,11 @@ class CustomLoadingCirclePainter extends CustomPainter {
   double sweepAngle;
   Color loadingColor;
   Color strokeColor;
+  Color backGroundColor;
   CustomLoadingCirclePainter(
       {required this.sweepAngle,
       required this.loadingColor,
+      required this.backGroundColor,
       required this.strokeColor});
 
   @override
@@ -36,6 +38,7 @@ class CustomLoadingCirclePainter extends CustomPainter {
     canvas.drawArc(rect, 4.713, sweepAngle, true, loadingPaint);
     // draw of a white circle to hide inner arc
     canvas.drawCircle(center, radius, Paint()..color = Colors.white);
+    canvas.drawCircle(center, radius, Paint()..color = backGroundColor);
   }
 
   @override

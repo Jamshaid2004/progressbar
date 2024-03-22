@@ -16,11 +16,13 @@ class CustomLoadingWidget extends StatefulWidget {
   final ProgressBarStyle progressBarStyle;
   final int totalProgressValue;
   final int completedProgressValue;
+  final Color backGroundColor;
   const CustomLoadingWidget({
     super.key,
     required this.size,
     required this.textColor,
     required this.strokeColor,
+    required this.backGroundColor,
     required this.showLoadingInDigit,
     required this.loadingStartColor,
     required this.loadingEndColor,
@@ -110,6 +112,7 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
               // custom widget if the selected style is circular
               ? CustomPaint(
                   painter: CustomLoadingCirclePainter(
+                      backGroundColor: widget.backGroundColor,
                       strokeColor: widget.strokeColor,
                       sweepAngle: loadingCircularAnimation.value,
                       loadingColor: colorAnimation.value!),
@@ -126,6 +129,7 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
                   painter: CustomLoadingLinearPainter(
                       progress: loadingLinearAnimation.value,
                       strokeColor: widget.strokeColor,
+                      backGroundColor: widget.backGroundColor,
                       loadingColor: colorAnimation.value!),
                   child: SizedBox(
                     height: widget.size,
