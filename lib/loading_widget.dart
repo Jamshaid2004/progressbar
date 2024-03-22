@@ -14,6 +14,8 @@ class CustomLoadingWidget extends StatefulWidget {
   final Duration durationToComplete;
   final Color textColor;
   final ProgressBarStyle progressBarStyle;
+  final int totalProgressValue;
+  final int completedProgressValue;
   const CustomLoadingWidget({
     super.key,
     required this.size,
@@ -24,6 +26,8 @@ class CustomLoadingWidget extends StatefulWidget {
     required this.loadingEndColor,
     required this.durationToComplete,
     required this.progressBarStyle,
+    required this.completedProgressValue,
+    required this.totalProgressValue,
   });
 
   @override
@@ -40,9 +44,20 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
   late Animation<double> loadingLinearAnimation;
   late Animation<int> textAnimation;
   late Animation<Color?> colorAnimation;
+
+  late double linearProgressBarWidth;
+  late double givenPercentFillWidth;
+  late double circularGivenPercentArcWidth;
   @override
   void initState() {
     super.initState();
+    linearProgressBarWidth = widget.size * 4;
+    givenPercentFillWidth =
+        (linearProgressBarWidth / widget.totalProgressValue) *
+            widget.completedProgressValue;
+    circularGivenPercentArcWidth =
+        (degreeToRadian(360) / widget.totalProgressValue) *
+            widget.completedProgressValue;
     loadingController = AnimationController(
       vsync: this,
       duration: widget.durationToComplete,
@@ -52,15 +67,16 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
 
     // tween for linear progress bar
     final Tween<double> linearProgressTween =
-        Tween<double>(begin: 0, end: widget.size * 4);
+        Tween<double>(begin: 0, end: givenPercentFillWidth);
     // tween for circular progress bar
-    final Tween<double> circularProgressTween =
-        Tween<double>(begin: degreeToRadian(0), end: degreeToRadian(360));
+    final Tween<double> circularProgressTween = Tween<double>(
+        begin: degreeToRadian(0), end: circularGivenPercentArcWidth);
     // tween for the color change in both progress bars
     final ColorTween colorTweenForProgress = ColorTween(
         begin: widget.loadingStartColor, end: widget.loadingEndColor);
     // tween for the text update in both progress bars
-    final IntTween textTweenForProgress = IntTween(begin: 0, end: 100);
+    final IntTween textTweenForProgress =
+        IntTween(begin: 0, end: widget.completedProgressValue);
 
     loadingLinearAnimation = linearProgressTween.animate(loadingController);
     loadingCircularAnimation = circularProgressTween.animate(loadingController);
@@ -72,16 +88,15 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
     return degree * pi / 180;
   }
 
+  bool isReset = false;
   void onPressed() {
-    bool isReset = false;
-    loadingController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        loadingController.reset();
-        isReset = true;
-      }
-    });
-    if (!isReset) {
+    if (isReset) {
+      loadingController.reset();
+
+      isReset = false;
+    } else {
       loadingController.forward();
+      isReset = true;
     }
   }
 
@@ -114,7 +129,7 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
                       loadingColor: colorAnimation.value!),
                   child: SizedBox(
                     height: widget.size,
-                    width: widget.size * 4,
+                    width: linearProgressBarWidth,
                     child: InkWell(
                       onTap: onPressed,
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_loading_animation/loading_widget.dart';
 
 enum ProgressBarStyle { linear, circular }
+
 /// widget for user to user and consume
 /// enumeration of [ProgressBarStyle] decides the custom painter to be used
 /// every property can be handled through this stateless widget
@@ -16,6 +17,8 @@ class CustomProgressBarWidget extends StatelessWidget {
   final bool showProgressInDigit;
   final double size;
   final Color textColor;
+  final int progressedValue;
+  final int totalValue;
 
   const CustomProgressBarWidget({
     super.key,
@@ -26,6 +29,8 @@ class CustomProgressBarWidget extends StatelessWidget {
     this.strokeColor = Colors.black,
     this.showProgressInDigit = true,
     this.textColor = Colors.black,
+    this.progressedValue = 100,
+    this.totalValue = 100,
     this.size = 50,
   });
 
@@ -35,6 +40,8 @@ class CustomProgressBarWidget extends StatelessWidget {
         size: size,
         textColor: textColor,
         strokeColor: strokeColor,
+        completedProgressValue: progressedValue,
+        totalProgressValue: totalValue,
         showLoadingInDigit: showProgressInDigit,
         loadingStartColor: startColor,
         loadingEndColor: endColor,
